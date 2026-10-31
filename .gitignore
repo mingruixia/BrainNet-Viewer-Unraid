@@ -1,0 +1,4 @@
+.server-secrets/
+*.key
+access_password.txt
+__pycache__/
