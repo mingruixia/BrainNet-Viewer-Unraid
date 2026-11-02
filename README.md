@@ -38,11 +38,14 @@ and it does not support PUID/PGID environment variables.
 
 ## Install
 
-Until the Community Applications listing has been approved, use the XML in
-`templates/brainnet-viewer-lan.xml` as a local Docker template. Copy it to
-`/boot/config/plugins/dockerMan/templates-user/my-brainnet-viewer-lan.xml` on
-your Unraid server, then select it from **Docker → Add Container → Template**.
-After approval, search for **brainnet-viewer-lan** in **Apps** instead.
+BrainNet Viewer LAN is available in [Unraid Community Applications](https://ca.unraid.net/apps?q=brainnet).
+Open **Apps** on your Unraid server, search for **brainnet-viewer-lan** (or
+**BrainNet Viewer**), select the application and choose **Install**. Prepare the
+certificate and password files described above before applying the template.
+
+For manual installation, copy `templates/brainnet-viewer-lan.xml` to
+`/boot/config/plugins/dockerMan/templates-user/my-brainnet-viewer-lan.xml`,
+then select it from **Docker → Add Container → Template**.
 
 Configure:
 
@@ -100,9 +103,9 @@ sessions. Retain the previous image tag for rollback.
 
 ## Validation and support
 
-This template is being prepared for Community Applications submission. Native
-Unraid installation, its form rendering and NVIDIA passthrough have not yet been
-validated. A Docker check on 2026-10-31 passed HTTPS readiness, login-page access,
+The application is listed in Community Applications. Native Unraid installation,
+its form rendering and NVIDIA passthrough have not yet been validated by the
+project team. A Docker check on 2026-10-31 passed HTTPS readiness, login-page access,
 two distinct secure session cookies, the HTTPS health-check override, non-root
 execution, read-only secret mounts and resource limits. It did not exercise
 worker rendering or Unraid's template installer and is not a claim of

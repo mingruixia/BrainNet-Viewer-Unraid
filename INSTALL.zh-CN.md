@@ -33,11 +33,13 @@ chmod 400 "$bnvSecrets/server.crt" "$bnvSecrets/server.key" "$bnvSecrets/access_
 
 ## 2. 安装应用
 
-应用尚未获 Community Applications 收录。收录前，可将仓库的
-`templates/brainnet-viewer-lan.xml` 复制到 Unraid 的
+应用已收录至 [Unraid Community Applications](https://ca.unraid.net/apps?q=brainnet)。
+在 Unraid 管理页面打开 **Apps**，搜索 **brainnet-viewer-lan** 或 **BrainNet Viewer**，
+选择应用并点击 **Install**。点击 **Apply** 前，请先准备好上一节要求的证书和密码文件。
+
+如需手动安装，可将仓库的 `templates/brainnet-viewer-lan.xml` 复制到
 `/boot/config/plugins/dockerMan/templates-user/my-brainnet-viewer-lan.xml`，
-再从 **Docker → Add Container → Template** 选择。收录后可在 **Apps** 搜索
-`brainnet-viewer-lan`。
+再从 **Docker → Add Container → Template** 选择。
 
 - **Network**：保持 `bridge`。
 - **HTTPS port**：默认 `1031`；冲突时更换主机端口，容器端口仍为 1031。
