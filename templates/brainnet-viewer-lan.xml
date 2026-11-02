@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Container version="2">
   <Name>brainnet-viewer-lan</Name>
-  <Repository>mingruixia/brainnet-viewer:2.0.0</Repository>
+  <Repository>mingruixia/brainnet-viewer:2.0.0-unraid.1</Repository>
   <Icon>https://raw.githubusercontent.com/mingruixia/BrainNet-Viewer-Unraid/main/icons/brainnet-viewer.png</Icon>
   <Registry>https://hub.docker.com/r/mingruixia/brainnet-viewer</Registry>
   <Network>bridge</Network>
@@ -10,20 +10,21 @@
   <Support>https://github.com/mingruixia/BrainNet-Viewer/issues</Support>
   <Project>https://github.com/mingruixia/BrainNet-Viewer</Project>
   <ReadMe>https://github.com/mingruixia/BrainNet-Viewer-Unraid/blob/main/README.md</ReadMe>
-  <Overview>BrainNet Viewer displays brain surfaces, networks, volumetric maps and atlas regions in a browser. This LAN template uses HTTPS and a team access password, with a separate application process and workspace for each signed-in browser session. Prepare a trusted server certificate, its private key and a password file before installation. Save Scene downloads a portable ZIP; session uploads are temporary. Intended for trusted teams on a LAN. CPU rendering works without an allocated GPU; NVIDIA acceleration is optional.</Overview>
+  <Overview>BrainNet Viewer displays brain surfaces, networks, volumetric maps and atlas regions in a browser. Install this template and open WebUI over HTTP; no certificate or password is required by default. Each browser session has a separate process and workspace. Use this mode on a trusted LAN. HTTPS and password access are optional advanced settings. Save Scene downloads a portable ZIP; Export Figure downloads the image and JSON separately. CPU rendering is available without a GPU; NVIDIA acceleration is optional.</Overview>
   <Category>Productivity: Tools:Utilities</Category>
-  <WebUI>https://[IP]:[PORT:1031]/index.html</WebUI>
+  <WebUI>http://[IP]:[PORT:1031]/index.html</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/mingruixia/BrainNet-Viewer-Unraid/main/templates/brainnet-viewer-lan.xml</TemplateURL>
   <License>GPL-3.0-or-later</License>
-  <Requires>Read the installation guide before starting. Requires a trusted TLS certificate, a private key, a password file readable by UID 10001, and an explicit HTTPS server origin. Unraid hardware validation is pending; Docker runtime checks are documented separately.</Requires>
-  <ExtraParams>--entrypoint=python --init --read-only --tmpfs=/tmp:size=2g,mode=1777 --memory=16g --cpus=1 --pids-limit 512 --cap-drop=ALL --security-opt=no-new-privileges:true --stop-timeout=30 '--health-cmd=python -c '"'"'import os,ssl,urllib.request,urllib.parse; req=urllib.request.Request("https://127.0.0.1:1031/_bnv/health",headers={"Host":urllib.parse.urlsplit(os.environ["BNV_SERVER_ORIGIN"]).netloc}); urllib.request.urlopen(req,context=ssl._create_unverified_context(),timeout=3).close()'"'"'' --health-interval=30s --health-timeout=5s --health-start-period=15s --health-retries=3</ExtraParams>
-  <PostArgs>-c 'import os,sys; from brainnet_viewer.web_server import main; sys.argv=["brainnet-server","--host","0.0.0.0","--port","1031","--public-origin",os.environ["BNV_SERVER_ORIGIN"],"--password-file","/run/bnv-secrets/access_password.txt","--cert","/run/bnv-secrets/server.crt","--key","/run/bnv-secrets/server.key","--max-sessions",os.environ["BNV_MAX_SESSIONS"],"--idle-seconds",os.environ["BNV_IDLE_SECONDS"],"--worker-threads",os.environ["BNV_WORKER_THREADS"]]; main()'</PostArgs>
+  <Requires>Default HTTP access is unencrypted and has no password. Use only on a trusted LAN. HTTPS and password access can be enabled independently in advanced settings. Native Unraid hardware validation is pending; Docker checks are documented separately.</Requires>
+  <ExtraParams>--init --read-only --tmpfs=/tmp:size=2g,mode=1777 --memory=16g --cpus=1 --pids-limit 512 --cap-drop=ALL --security-opt=no-new-privileges:true --stop-timeout=30</ExtraParams>
   <ExtraSearchTerms>brain neuroscience neuroimaging connectome MRI visualization LAN</ExtraSearchTerms>
-  <Config Name="HTTPS port" Target="1031" Default="1031" Mode="tcp" Description="Host HTTPS port. Match this port in Public HTTPS origin." Type="Port" Display="always" Required="true" Mask="false">1031</Config>
-  <Config Name="Public HTTPS origin" Target="BNV_SERVER_ORIGIN" Default="" Mode="" Description="Required: https://YOUR_UNRAID_IP:1031, without a path. Must match the certificate and browser address." Type="Variable" Display="always" Required="true" Mask="false" />
-  <Config Name="Private server files" Target="/run/bnv-secrets" Default="/mnt/user/appdata/brainnet-viewer-lan/secrets" Mode="ro" Description="Prepare server.crt, server.key and access_password.txt first. Mount read-only; files must be readable by UID 10001. Do not expose this directory through SMB/NFS." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/brainnet-viewer-lan/secrets</Config>
-  <Config Name="Rendering backend" Target="BNV_RENDER_BACKEND" Default="auto" Mode="" Description="auto chooses an accessible GPU when a rendering probe succeeds, otherwise CPU. cpu forces CPU; gpu requires GPU. Device allocation is configured separately." Type="Variable" Display="advanced" Required="true" Mask="false">auto</Config>
-  <Config Name="Maximum sessions" Target="BNV_MAX_SESSIONS" Default="4" Mode="" Description="Maximum signed-in sessions (1-32). All share the container CPU/memory limits." Type="Variable" Display="advanced" Required="true" Mask="false">4</Config>
-  <Config Name="Idle timeout (seconds)" Target="BNV_IDLE_SECONDS" Default="1800" Mode="" Description="Idle session lifetime (30-86400 seconds). Save Scene before expiry." Type="Variable" Display="advanced" Required="true" Mask="false">1800</Config>
-  <Config Name="Worker threads" Target="BNV_WORKER_THREADS" Default="2" Mode="" Description="Scientific-library threads per worker (1-64); not a per-worker CPU quota." Type="Variable" Display="advanced" Required="true" Mask="false">2</Config>
+  <Config Name="Web port" Target="1031" Default="1031" Mode="tcp" Description="Host HTTP port; container port stays 1031." Type="Port" Display="always" Required="true" Mask="false">1031</Config>
+  <Config Name="HTTP or HTTPS" Target="BNV_SCHEME" Default="http|https" Mode="" Description="Default http needs no certificate. For https, configure the origin and mount server.crt/server.key." Type="Variable" Display="advanced" Required="false" Mask="false">http</Config>
+  <Config Name="Password access" Target="BNV_PASSWORD_AUTH" Default="off|on" Mode="" Description="Default off opens directly. For on, mount access_password.txt (16-256 UTF-8 bytes)." Type="Variable" Display="advanced" Required="false" Mask="false">off</Config>
+  <Config Name="Public origin (optional)" Target="BNV_SERVER_ORIGIN" Default="" Mode="" Description="Leave empty for automatic private-IP HTTP access. Required for HTTPS or a DNS name: http(s)://host:port without a path." Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Private server files (optional)" Target="/run/bnv-secrets" Default="" Mode="ro" Description="Leave empty for default HTTP/no-password mode. Optional read-only directory: server.crt/server.key for HTTPS; access_password.txt for password access. Files must be readable by UID 10001." Type="Path" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Rendering backend" Target="BNV_RENDER_BACKEND" Default="auto|cpu|gpu" Mode="" Description="auto uses an accessible GPU after a rendering probe, otherwise CPU. Device allocation is configured separately." Type="Variable" Display="advanced" Required="true" Mask="false">auto</Config>
+  <Config Name="Maximum sessions" Target="BNV_MAX_SESSIONS" Default="4" Mode="" Description="Maximum browser sessions (1-32); all share container CPU and memory limits." Type="Variable" Display="advanced" Required="true" Mask="false">4</Config>
+  <Config Name="Idle timeout (seconds)" Target="BNV_IDLE_SECONDS" Default="1800" Mode="" Description="Idle lifetime (30-86400 seconds). Save Scene before the session ends." Type="Variable" Display="advanced" Required="true" Mask="false">1800</Config>
+  <Config Name="Worker threads" Target="BNV_WORKER_THREADS" Default="2" Mode="" Description="Scientific-library threads per worker (1-64), not a CPU quota." Type="Variable" Display="advanced" Required="true" Mask="false">2</Config>
 </Container>
