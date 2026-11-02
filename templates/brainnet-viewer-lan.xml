@@ -2,6 +2,7 @@
 <Container version="2">
   <Name>brainnet-viewer-lan</Name>
   <Repository>mingruixia/brainnet-viewer:2.0.0</Repository>
+  <Icon>https://raw.githubusercontent.com/mingruixia/BrainNet-Viewer-Unraid/main/icons/brainnet-viewer.png</Icon>
   <Registry>https://hub.docker.com/r/mingruixia/brainnet-viewer</Registry>
   <Network>bridge</Network>
   <Shell>sh</Shell>

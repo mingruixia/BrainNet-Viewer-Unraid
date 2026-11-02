@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <CommunityApplications>
+  <Icon>https://raw.githubusercontent.com/mingruixia/BrainNet-Viewer-Unraid/main/icons/brainnet-viewer.png</Icon>
   <Profile>BrainNet Viewer LAN deployment templates, maintained with the BrainNet Viewer project. Installation documentation is available in English and Chinese. Report problems through the project GitHub issue tracker.</Profile>
   <WebPage>https://github.com/mingruixia/BrainNet-Viewer-Unraid</WebPage>
   <Forum>https://github.com/mingruixia/BrainNet-Viewer/issues</Forum>
